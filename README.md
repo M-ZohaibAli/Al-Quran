@@ -42,7 +42,7 @@
 
 ## 📸 Screenshots
 
-![Homepage Screenshot](/Online Quran - Google Chrome 5_5_2025 1_44_27 PM.png)
+![Homepage Screenshot](https://i.ibb.co/HfgvDvR6/Online-Quran-Google-Chrome-5-5-2025-1-44-27-PM.png)
 
 ---
 
