@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Quran</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for Arabic readability */
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            line-height: 2;
+            direction: rtl; /* Right-to-left for Arabic */
+            text-align: right;
+            padding: 1rem;
+            word-spacing: 2px;
+            white-space: pre-line;
+        }
+
+        .verse-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .surah-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .surah-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<header class="top-0 z-50 bg-gradient-to-r from-blue-700 to-indigo-800 shadow-xl">
+    
+    <nav class="container mx-auto px-4 py-3 flex items-center justify-between border-b border-blue-500/30">
+        
+        <div class="flex items-center space-x-4">
+            
+            <a href="#" class="flex items-center hover:text-blue-200 transition-colors">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Home
+            </a>
+
+
+   
+            
+            <div class="relative group" id="languageSelector">
+                <button class="flex items-center space-x-1 hover:text-blue-200">
+                    <span id="currentLanguage">English</span>
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <div class="absolute hidden group-hover:block bg-white text-gray-800 rounded-lg shadow-lg mt-2 min-w-[200px] z-50">
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lang="en">English</a>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lang="ar">العربية</a>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lang="id">Bahasa Indonesia</a>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="flex items-center space-x-4">
+            
+            <button id="settingsButton" class="p-2 rounded-full hover:bg-blue-600/30 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </button>
+
+            <div class="h-6 w-px bg-blue-500/50"></div>
+
+            
+            <button id="accountButton" class="flex items-center space-x-2 hover:text-blue-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span>Account</span>
+            </button>
+        </div>
+    </nav>
+
+    
+    <div class="container mx-auto px-4 py-8 text-center">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-4xl font-bold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-cyan-300">
+                Al-Quran
+            </h1>
+            <p class="text-lg text-blue-100 mb-6">Explore the Holy Quran in multiple languages and translations</p>
+
+            
+            <div class="relative max-w-xl mx-auto">
+                <div class="relative">
+                    <input type="text" 
+                           id="searchInput"
+                           placeholder="Search Surah or Verse..." 
+                           class="w-full px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-blue-300/30 focus:outline-none focus:ring-2 focus:ring-blue-300 text-white placeholder-blue-200">
+                    <button id="searchButton" class="absolute right-3 top-2 p-2 bg-blue-600 rounded-full hover:bg-blue-500 transition-colors">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="searchResults" class="hidden absolute w-full mt-2 bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="h-1 bg-blue-500/30">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-cyan-400 to-blue-300 w-3/4"></div>
+    </div>
+</header>
+
+
+<div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div class="modal-content bg-white rounded-lg p-6 max-w-md mx-auto mt-20">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Settings</h3>
+            <button id="closeSettings" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="block mb-2">Theme</label>
+                <select id="themeSelect" class="w-full p-2 border rounded">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2">Font Size</label>
+                <input type="range" id="fontSize" min="12" max="24" value="16" class="w-full">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="accountModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div class="modal-content bg-white rounded-lg p-6 max-w-md mx-auto mt-20">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Account</h3>
+            <button id="closeAccount" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+        <div>
+            
+            <p class="text-gray-600">User profile, login options, or other account-related info goes here.</p>
+        </div>
+    </div>
+</div>
+
+
+    
+    <main class="container mx-auto px-4 py-8">
+        
+        <div id="loader" class="flex justify-center items-center h-32">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+        </div>
+
+
+<div id="juzCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+
+        
+        <div id="surahCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+
+        
+        <div id="versesContainer" class="mt-8 hidden">
+            <button id="backButton" class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4">Back to Surahs</button>
+            <div id="versesList" class="space-y-4"></div>
+        </div>
+    </main>
+
+    
+     
+<footer class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white mt-16">
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            <div class="mb-8 md:mb-0">
+                <h3 class="text-xl font-bold mb-4">About Al-Quran</h3>
+                <p class="text-blue-200 leading-relaxed">
+                    Providing access to the Holy Quran with multiple translations, tafsir, and study tools since 2025.
+                </p>
+                <div class="mt-4 flex space-x-3">
+                    <a href="#" class="text-blue-200 hover:text-white">
+                        <i class="fab fa-apple"></i>
+                    </a>
+                    <a href="#" class="text-blue-200 hover:text-white">
+                        <i class="fab fa-google-play"></i>
+                    </a>
+                    <a href="#" class="text-blue-200 hover:text-white">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-blue-200 hover:text-white">Juz' Index</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Surah List</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Bookmarks</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Qibla Finder</a></li>
+                </ul>
+            </div>
+
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Resources</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-blue-200 hover:text-white">Tafsir Library</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Hadith Collection</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Learning Center</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">API Documentation</a></li>
+                </ul>
+            </div>
+
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Connect With Us</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-blue-200 hover:text-white">Contact Support</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Feedback</a></li>
+                    <li><a href="#" class="text-blue-200 hover:text-white">Careers</a></li>
+                    <li class="mt-4">
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-blue-200 hover:text-white">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="text-blue-200 hover:text-white">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-blue-200 hover:text-white">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        
+        <div class="border-t border-blue-800 mt-8 pt-8 text-center text-blue-300">
+            <p>&copy; 2025 Al-Quran Online. All rights reserved.</p>
+            <div class="mt-2">
+                <a href="#" class="hover:text-white">Privacy Policy</a> | 
+                <a href="#" class="hover:text-white">Terms of Service</a> | 
+                <a href="#" class="hover:text-white">FAQ</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+        }
+    });
+});
+</script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+       $(document).ready(function () {
+    // Element references
+    const loader = $("#loader");
+    const surahCardsContainer = $("#surahCardsContainer");
+    const versesContainer = $("#versesContainer");
+    const backButton = $("#backButton");
+    const versesList = $("#versesList");
+    const juzCardsContainer = $("#juzCardsContainer");
+
+    // State management
+    let currentView = 'surahs';
+    let previousView = 'surahs';
+    let originalSurahCardsHTML = '';
+    let allSurahs = [];
+    let juzsData = [];
+
+    // Initial load
+    function initializeApp() {
+        loader.removeClass("hidden");
+        fetchSurahs();
+        setupEventHandlers();
+        setupSearch();
+        setupModals();
+    }
+
+    // Fetch initial surah data
+    function fetchSurahs() {
+        $.ajax({
+            url: "https://api.quran.com/api/v4/chapters",
+            method: "GET",
+            success: function (data) {
+                allSurahs = data.chapters;
+                renderSurahCards(allSurahs);
+                initializeJuzs();
+            },
+            error: handleAjaxError
+        });
+    }
+
+    // Render surah cards (FIXED TYPO HERE)
+    function renderSurahCards(surahs) {
+        surahCardsContainer.empty();
+        surahs.forEach(surah => {  // Changed 'surahes' to 'surahs'
+            surahCardsContainer.append(createSurahCard(surah));
+        });
+        originalSurahCardsHTML = surahCardsContainer.html();
+        loader.addClass("hidden");
+        surahCardsContainer.removeClass("hidden");
+    }
+
+        
+            // Create individual surah card HTML
+            function createSurahCard(surah) {
+                return `
+                    <div class="surah-card bg-white p-6 rounded-lg shadow-md hover:bg-gray-50" 
+                         data-surah-id="${surah.id}">
+                        <h3 class="text-xl font-bold text-blue-600 mb-2">${surah.name_simple}</h3>
+                        <p class="text-gray-700">Verses: ${surah.verses_count}</p>
+                        <p class="text-sm text-gray-500">${surah.translated_name.name}</p>
+                    </div>
+                `;
+            }
+        
+            // Fetch and display verses
+            function fetchVerses(chapterNumber) {
+                loader.removeClass("hidden");
+                versesList.empty();
+        
+                $.ajax({
+                    url: `https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=${chapterNumber}`,
+                    method: "GET",
+                    success: function (data) {
+                        data.verses.forEach(verse => {
+                            versesList.append(`
+                                <div class="verse-card p-4">
+                                    <div class="arabic-text">${verse.text_uthmani}</div>
+                                    <div class="text-gray-500 text-sm mt-2">${verse.verse_key}</div>
+                                </div>
+                            `);
+                        });
+                        switchView('verses');
+                    },
+                    error: handleAjaxError
+                });
+            }
+        
+            // View management
+            function switchView(view) {
+                surahCardsContainer.addClass("hidden");
+                versesContainer.addClass("hidden");
+                juzCardsContainer.addClass("hidden");
+                loader.addClass("hidden");
+        
+                previousView = currentView;
+                currentView = view;
+        
+                if (view === 'surahs') {
+                    surahCardsContainer.removeClass("hidden");
+                } else if (view === 'verses') {
+                    versesContainer.removeClass("hidden");
+                } else if (view === 'juzs') {
+                    juzCardsContainer.removeClass("hidden");
+                }
+            }
+        
+            // Juz functionality
+            function initializeJuzs() {
+                $.ajax({
+                    url: "https://api.quran.com/api/v4/juzs",
+                    method: "GET",
+                    success: function (data) {
+                        juzsData = data.juzs;
+                        renderJuzCards();
+                    }
+                });
+            }
+        
+            function renderJuzCards() {
+                juzCardsContainer.empty();
+                juzsData.forEach(juz => {
+                    const surahNames = getJuzSurahNames(juz);
+                    juzCardsContainer.append(`
+                        <div class="juz-card bg-white p-6 rounded-lg shadow-md hover:bg-gray-50" 
+                             data-juz-number="${juz.juz_number}">
+                            <h3 class="text-xl font-bold text-blue-600 mb-2">Juz ${juz.juz_number}</h3>
+                            <p class="text-gray-700">Contains: ${surahNames.join(', ')}</p>
+                        </div>
+                    `);
+                });
+            }
+        
+            function getJuzSurahNames(juz) {
+                return Object.keys(juz.verse_mapping)
+                    .map(id => allSurahs.find(s => s.id == id)?.name_simple)
+                    .filter(name => name);
+            }
+        
+            // Event handlers
+            function setupEventHandlers() {
+                // Surah card click
+                surahCardsContainer.on("click", ".surah-card", function () {
+                    const chapterNumber = $(this).data("surah-id");
+                    fetchVerses(chapterNumber);
+                });
+        
+                // Back button
+                backButton.on("click", handleBackButton);
+        
+                // Juz navigation
+                $('#juzButton').click(showJuzView);
+                juzCardsContainer.on('click', '.juz-card', handleJuzSelection);
+            }
+        
+            function handleBackButton() {
+                if (currentView === 'verses') {
+                    switchView(previousView);
+                } else {
+                    switchView('surahs');
+                }
+            }
+        
+            function showJuzView() {
+                switchView('juzs');
+            }
+        
+            function handleJuzSelection() {
+                const juzNumber = $(this).data('juz-number');
+                const juz = juzsData.find(j => j.juz_number == juzNumber);
+                const filteredSurahs = allSurahs.filter(s => 
+                    Object.keys(juz.verse_mapping).includes(s.id.toString())
+                );
+                
+                surahCardsContainer.empty();
+                filteredSurahs.forEach(surah => {
+                    surahCardsContainer.append(createSurahCard(surah));
+                });
+                switchView('filteredSurahs');
+            }
+        
+            // Search functionality
+            // Search functionality (FIXED QUOTATION MARKS)
+    function setupSearch() {
+        const searchInput = $('#searchInput');
+        const searchResults = $('#searchResults');
+
+        searchInput.on('input', debounce(function (e) {
+            const query = e.target.value.toLowerCase();
+            const results = allSurahs.filter(surah => 
+                surah.name_simple.toLowerCase().includes(query)
+            );
+            renderSearchResults(results);
+        }, 300));
+
+        searchResults.on('click', '[data-surah]', function (e) {
+            e.preventDefault();
+            fetchVerses($(this).data('surah'));
+            searchResults.addClass("hidden");
+        });
+    }
+
+    function renderSearchResults(results) {
+        const searchResults = $('#searchResults');
+        searchResults.empty();
+        
+        results.forEach(surah => {
+            searchResults.append(`
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100" data-surah="${surah.id}">
+                    ${surah.name_simple} (${surah.verses_count} verses)
+                </a>
+            `);
+        });
+        searchResults.toggleClass('hidden', results.length === 0);
+    }
+
+            // Modal controls
+            function setupModals() {
+                // Settings modal
+                $('#settingsButton').click(() => $('#settingsModal').removeClass('hidden'));
+                $('#closeSettings').click(() => $('#settingsModal').addClass('hidden'));
+        
+                // Account modal
+                $('#accountButton').click(() => $('#accountModal').removeClass('hidden'));
+                $('#closeAccount').click(() => $('#accountModal').addClass('hidden'));
+        
+                // Close modals on outside click
+                $(window).click(function (e) {
+                    if (e.target === $('#settingsModal')[0]) $('#settingsModal').addClass('hidden');
+                    if (e.target === $('#accountModal')[0]) $('#accountModal').addClass('hidden');
+                });
+            }
+        
+            // Utility functions
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+        
+            function handleAjaxError(err) {
+                console.error("API Error:", err);
+                loader.addClass("hidden");
+            }
+        
+            // Start the application
+            initializeApp();
+        });
+        </script>
+
+
+</body>
+</html>
