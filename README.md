@@ -1,9 +1,9 @@
 # 📖 Al Quran Online
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Website Status](https://img.shields.io/website-up-down-green-red/http/yourwebsite.com.svg)](https://yourwebsite.com)
+[![Website Status](https://img.shields.io/website-up-down-green-red/http/yourwebsite.com.svg)]([https://yourwebsite.com](https://al-quran-gold.vercel.app/))
 [![Made with React](https://img.shields.io/badge/Made%20with-React-blue.svg)](https://reactjs.org/)
-[![Open Source Love](https://img.shields.io/badge/Open%20Source-%F0%9F%92%9A-brightgreen.svg)](https://github.com/yourusername/al-quran-online)
+[![Open Source Love](https://img.shields.io/badge/Open%20Source-%F0%9F%92%9A-brightgreen.svg)](https://github.com/m-zohaibali/al-quran)
 
 ---
 
@@ -26,7 +26,7 @@
 
 ## 🚀 Demo
 
-🔗 [Live Website](https://yourwebsite.com)
+🔗 [Live Website](https://al-quran-gold.vercel.app/)
 
 ---
 
